@@ -6,10 +6,14 @@ import { ApiError } from "../errors/apiError";
 import UserFacade from "./userFacadeWithDB";
 import IPosition from "../interfaces/Position";
 import IPost from "../interfaces/Post";
-import { positionCreator } from "../utils/geoUtils";
+import {
+  positionCreator,
+  getLatitudeInside,
+  getLatitudeOutside,
+} from "../utils/geoUtils";
 import {
   POSITION_COLLECTION_NAME,
-  POST_COLLECTION_NAME
+  POST_COLLECTION_NAME,
 } from "../config/collectionNames";
 import { ExceptionHandler } from "winston";
 
@@ -36,6 +40,8 @@ export default class GameFacade {
         .db(dbName)
         .collection(POSITION_COLLECTION_NAME);
 
+      postCollection = client.db(dbName).collection(POST_COLLECTION_NAME);
+      await postCollection.createIndex({ location: "2dsphere" });
       //TODO
       //1) Create expiresAfterSeconds index on lastUpdated
       //2) Create 2dsphere index on location
@@ -100,11 +106,11 @@ export default class GameFacade {
       );
 
       //If anyone found,  format acording to requirements
-      const formatted = nearbyPlayers.map(player => {
+      const formatted = nearbyPlayers.map((player) => {
         return {
           userName: player.userName,
           lat: player.location.coordinates[1],
-          lon: player.location.coordinates[0]
+          lon: player.location.coordinates[0],
           // Complete this, using the requirements
         };
       });
@@ -125,11 +131,11 @@ export default class GameFacade {
           $near: {
             $geometry: {
               type: "Point",
-              coordinates: [point.coordinates[0], point.coordinates[1]]
+              coordinates: [point.coordinates[0], point.coordinates[1]],
             },
-            $maxDistance: distance
-          }
-        }
+            $maxDistance: distance,
+          },
+        },
       });
       return found.toArray();
     } catch (err) {
@@ -146,14 +152,19 @@ export default class GameFacade {
       const post: IPost | null = await postCollection.findOne({
         _id: postId,
         location: {
-          $near: {}
-          // Todo: Complete this
-        }
+          $near: { type: "Point", coordinates: [lon, lat] },
+          $maxDistance: 10,
+        },
       });
       if (post === null) {
         throw new ApiError("Post not reached", 400);
       }
-      return { postId: post._id, task: post.task.text, isUrl: post.task.isUrl };
+
+      return {
+        postId: post._id,
+        task: post.task.text,
+        isUrl: post.task.isUrl,
+      };
     } catch (err) {
       throw err;
     }
@@ -175,8 +186,8 @@ export default class GameFacade {
       taskSolution,
       location: {
         type: "Point",
-        coordinates: [lon, lat]
-      }
+        coordinates: [lon, lat],
+      },
     });
     const newPost: any = status.ops;
     return newPost as IPost;

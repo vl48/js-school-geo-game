@@ -13,7 +13,7 @@ import setupDB from "../config/setupDB";
   gameFacade.setDatabase(client);
 })();
 
-router.post("/nearbyplayers", async function(req, res, next) {
+router.post("/nearbyplayers", async function (req, res, next) {
   try {
     const result = await gameFacade.nearbyPlayers(
       req.body.userName,
@@ -27,8 +27,17 @@ router.post("/nearbyplayers", async function(req, res, next) {
     next(err);
   }
 });
-router.post("/getPostIfReached", async function(req, res, next) {
-  throw new Error("Not yet implemented");
+router.post("/getPostIfReached", async function (req, res, next) {
+  try {
+    const result = await gameFacade.getPostIfReached(
+      req.body.postId,
+      req.body.lat,
+      req.body.lon
+    );
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;
