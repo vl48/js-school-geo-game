@@ -81,6 +81,30 @@ export default class GameFacade {
     }
   }
 
+  static async isUserInArea(longitude: number, latitude: number) {
+    try {
+      const point = { type: "Point", coordinates: [longitude, latitude] };
+      let gamearea = await gameAreaCollection.findOne({
+        location: {
+          $geoIntersects: {
+            $geometry: point,
+          },
+        },
+      });
+
+      let isInside = gamearea == null ? false : true;
+      let msg = isInside
+        ? "Point was inside the tested polygon"
+        : "Point was NOT inside tested polygon";
+      return {
+        status: isInside,
+        msg: msg,
+      };
+    } catch (err) {
+      throw new ApiError("Couldnt determine if inside gamearea", 500);
+    }
+  }
+
   static async nearbyPlayers(
     userName: string,
     password: string,

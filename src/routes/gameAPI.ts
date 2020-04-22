@@ -22,6 +22,18 @@ router.get("/gamearea", async (req, res, next) => {
   }
 });
 
+router.get("/isuserinarea/:lon/:lat", async function (req, res, next) {
+  try {
+    const result = await gameFacade.isUserInArea(
+      parseFloat(req.params.lon),
+      parseFloat(req.params.lat)
+    );
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.post("/nearbyplayers", async function (req, res, next) {
   try {
     const result = await gameFacade.nearbyPlayers(
