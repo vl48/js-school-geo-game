@@ -13,6 +13,15 @@ import setupDB from "../config/setupDB";
   gameFacade.setDatabase(client);
 })();
 
+router.get("/gamearea", async (req, res, next) => {
+  try {
+    const polygonForClient = await gameFacade.gameArea();
+    res.json(polygonForClient);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.post("/nearbyplayers", async function (req, res, next) {
   try {
     const result = await gameFacade.nearbyPlayers(

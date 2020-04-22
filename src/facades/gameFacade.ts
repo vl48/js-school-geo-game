@@ -14,11 +14,13 @@ import {
 import {
   POSITION_COLLECTION_NAME,
   POST_COLLECTION_NAME,
+  GAMEAREA_COLLECTION_NAME,
 } from "../config/collectionNames";
 import { ExceptionHandler } from "winston";
 
 let positionCollection: mongo.Collection;
 let postCollection: mongo.Collection;
+let gameAreaCollection: mongo.Collection;
 const EXPIRES_AFTER = 30;
 
 export default class GameFacade {
@@ -46,6 +48,10 @@ export default class GameFacade {
       //1) Create expiresAfterSeconds index on lastUpdated
       //2) Create 2dsphere index on location
 
+      gameAreaCollection = client
+        .db(dbName)
+        .collection(GAMEAREA_COLLECTION_NAME);
+
       //TODO uncomment if you plan to do this part of the exercise
       //postCollection = client.db(dbName).collection(POST_COLLECTION_NAME);
       //TODO If you do this part, create 2dsphere index on location
@@ -53,6 +59,25 @@ export default class GameFacade {
       return client.db(dbName);
     } catch (err) {
       console.error("Could not connect", err);
+    }
+  }
+
+  /*
+  Create a new polygon meant to be used on clients by React Native's MapView which
+  requres an object as the one we create below 
+  NOTE --> how we swap longitude, latitude values
+  */
+  static async gameArea() {
+    try {
+      let gameArea = await gameAreaCollection.findOne({ type: "Polygon" });
+      let polygonForClient = {
+        coordinates: gameArea.coordinates[0].map((point: any) => {
+          return { latitude: point[1], longitude: point[0] };
+        }),
+      };
+      return polygonForClient;
+    } catch (err) {
+      throw new ApiError("Couldnt get gamearea", 500);
     }
   }
 
