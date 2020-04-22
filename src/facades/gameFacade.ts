@@ -69,9 +69,9 @@ export default class GameFacade {
   */
   static async gameArea() {
     try {
-      let gameArea = await gameAreaCollection.findOne({ type: "Polygon" });
+      let data = await gameAreaCollection.findOne({ _id: "mainArea" });
       let polygonForClient = {
-        coordinates: gameArea.coordinates[0].map((point: any) => {
+        coordinates: data.location.coordinates[0].map((point: any) => {
           return { latitude: point[1], longitude: point[0] };
         }),
       };
