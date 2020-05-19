@@ -26,6 +26,12 @@ const client = new MongoClient(uri, {
     await usersCollection.deleteMany({});
     await usersCollection.createIndex({ userName: 1 }, { unique: true });
     const secretHashed = await bryptAsync("secret");
+    const simUser = {
+      name: "simulator",
+      userName: "sim",
+      password: secretHashed,
+      role: "team",
+    };
     const team1 = {
       name: "Team1-inside",
       userName: "t1",
@@ -33,7 +39,7 @@ const client = new MongoClient(uri, {
       role: "team",
     };
     const team2 = {
-      name: "Team2.inside",
+      name: "Team2-inside",
       userName: "t2",
       password: secretHashed,
       role: "team",
@@ -56,6 +62,7 @@ const client = new MongoClient(uri, {
       team2,
       team3,
       team4,
+      simUser,
     ]);
 
     const positionsCollection = db.collection(POSITION_COLLECTION_NAME);

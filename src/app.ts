@@ -2,8 +2,11 @@ require("dotenv").config();
 import express from "express";
 import path from "path";
 import { ApiError } from "./errors/apiError";
+import cors from "cors";
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.static(path.join(process.cwd(), "public")));
 
@@ -15,11 +18,13 @@ app.use(express.json());
 //let userAPIRouter = require('./routes/userApi');
 let userAPIRouter = require("./routes/userApiDB");
 let gameAPIRouter = require("./routes/gameAPI");
-let geoNoBackendRouter = require("./routes/geoNoBackend");
+let graphqlAPIRouter = require("./routes/graphqlApi");
+//let geoNoBackendRouter = require("./routes/geoNoBackend");
 
 app.use("/api/users", userAPIRouter);
 app.use("/gameapi", gameAPIRouter);
-app.use("/geoapi", gameAPIRouter);
+app.use("/graphql", graphqlAPIRouter);
+//app.use("/geoapi", gameAPIRouter);
 
 app.get("/api/dummy", (req, res) => {
   res.json({ msg: "Hello" });
