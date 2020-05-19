@@ -67,15 +67,15 @@ const root = {
 };
 
 //Only if we need roles
-router.use("/", (req: any, res, next) => {
-  if (USE_AUTHENTICATION) {
+if (USE_AUTHENTICATION) {
+  router.use("/", (req: any, res, next) => {
     const role = req.role;
     if (role != "admin") {
       throw new ApiError("Not Authorized", 403);
     }
     next();
-  }
-});
+  });
+}
 
 router.use(
   "/",
