@@ -9,4 +9,4 @@ https://jsgeo.cph-vl48.com/
 
 ## P2 exam questions: https://docs.google.com/document/d/1A52k0PLYK0BXc8LsML_kmfoNkPOaavtEuDQUiuw79Cw/edit
 
-## P1 Exam questions: https://docs.google.com/document/d/1JQpBvRvFd-qMMV7srqNdYZ6GIYiBjOyxkWIuCJSk2Ec/edit
+## P1 Exam questions: WIP
