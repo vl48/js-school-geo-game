@@ -8,3 +8,5 @@ https://jsgeo.cph-vl48.com/
 ## P3 Exam questions: https://docs.google.com/document/d/1jMjQvwuP49SD17oUqbtWbQVyNaDQLa4glL9qw2DRtAU/edit
 
 ## P2 exam questions: https://docs.google.com/document/d/1A52k0PLYK0BXc8LsML_kmfoNkPOaavtEuDQUiuw79Cw/edit
+
+## P1 Exam questions: https://docs.google.com/document/d/1JQpBvRvFd-qMMV7srqNdYZ6GIYiBjOyxkWIuCJSk2Ec/edit
